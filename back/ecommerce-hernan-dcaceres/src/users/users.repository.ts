@@ -15,7 +15,7 @@ type User = {
 
 const users: User[] = [
   {
-    id: '1',
+    id: '550e8400-e29b-41d4-a716-446655440000',
     email: 'john.doe@example.com',
     name: 'John Doe',
     password: 'securepassword1',
@@ -25,7 +25,7 @@ const users: User[] = [
     city: 'Springfield',
   },
   {
-    id: '2',
+    id: '123e4567-e89b-12d3-a456-426614174000',
     email: 'jane.smith@example.com',
     name: 'Jane Smith',
     password: 'securepassword2',
@@ -35,7 +35,7 @@ const users: User[] = [
     city: 'Metropolis',
   },
   {
-    id: '3',
+    id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
     email: 'michael.brown@example.com',
     name: 'Michael Brown',
     password: 'securepassword3',
@@ -45,7 +45,7 @@ const users: User[] = [
     city: 'Gotham',
   },
   {
-    id: '4',
+    id: '6fa459ea-ee8a-3ca4-894e-db77e160355e',
     email: 'emily.jones@example.com',
     name: 'Emily Jones',
     password: 'securepassword4',
@@ -55,7 +55,7 @@ const users: User[] = [
     city: 'Star City',
   },
   {
-    id: '5',
+    id: '16fd2706-8baf-433b-82eb-8c7fada847da',
     email: 'william.green@example.com',
     name: 'William Green',
     password: 'securepassword5',
@@ -68,7 +68,45 @@ const users: User[] = [
 
 @Injectable()
 export class UsersRepository {
-  async getUsers() {
-    return await users;
+  async getUsers(page: number, limit: number) {
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const usersList = users.slice(start, end);
+
+    return await usersList.map(
+      ({ password, ...userNoPassword }) => userNoPassword,
+    );
+  }
+
+  async getUserById(id: string) {
+    const userFound = users.findIndex((u) => u.id === id);
+    if (userFound === -1) return `No se encontró usuario con ID: ${id}`;
+    const { password, ...userNoPassword } = users[userFound];
+    return userNoPassword;
+  }
+
+  async createUser(user: User) {
+    users.push({ ...user, id: user.email });
+    return user.email;
+  }
+
+  async updateUser(id: string, user: User) {
+    const userFound = users.findIndex((u) => u.id === id);
+    if (userFound === -1) return `No se encontró usuario con ID: ${id}`;
+
+    users[userFound] = { ...users[userFound], ...user };
+    return users[userFound].id;
+  }
+
+  async deleteUser(id: string) {
+    const userFound = users.findIndex((u) => u.id === id);
+    if (userFound === -1) return `No se encontró usuario con ID: ${id}`;
+
+    users.splice(userFound, 1);
+    return id;
+  }
+
+  getuserByEmail(email: string) {
+    return users.find((user) => user.email === email);
   }
 }
