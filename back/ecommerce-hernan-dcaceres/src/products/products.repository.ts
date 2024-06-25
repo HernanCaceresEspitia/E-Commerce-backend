@@ -50,11 +50,59 @@ const products: Product[] = [
     stock: true,
     imgUrl: 'https://example.com/tablet.jpg',
   },
+  {
+    id: '1',
+    name: 'Laptop',
+    description: 'A high performance laptop',
+    price: 999.99,
+    stock: true,
+    imgUrl: 'https://example.com/laptop.jpg',
+  },
 ];
 
 @Injectable()
-export class ProductsRespository {
-  async getProducts() {
-    return await products;
+export class ProductsRepository {
+  //* Obtener todos los productos
+
+  async getProducts(page: number, limit: number) {
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const productsList = products.slice(start, end);
+
+    return await productsList;
+  }
+
+  //* Obtener producto por ID
+
+  async getProductById(id: string) {
+    const productFound = products.find((p) => p.id === id);
+    if (!productFound) return `Producto no encontrado con ID: ${id}`;
+    return productFound;
+  }
+
+  //* Crear producto
+
+  async createProduct(product: Product) {
+    products.push(product);
+    return product;
+  }
+
+  //* Modificar producto
+
+  async updateProduct(id: string, product: Product) {
+    const productFound = products.findIndex((p) => p.id === id);
+    if (productFound === -1) return 'Producto no encontrado';
+    products[productFound] = { ...products[productFound], ...product };
+    return products[productFound];
+  }
+
+  //* Eliminar producto
+
+  async deleteProduct(id: string) {
+    const productFound = products.findIndex((p) => p.id === id);
+    if (productFound === -1) return 'Producto no encontrado';
+
+    products.splice(productFound, 1);
+    return `Producto con ID ${id} eliminado`;
   }
 }

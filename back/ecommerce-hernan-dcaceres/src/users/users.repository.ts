@@ -68,6 +68,8 @@ const users: User[] = [
 
 @Injectable()
 export class UsersRepository {
+  //* Obtener todos los usuarios
+
   async getUsers(page: number, limit: number) {
     const start = (page - 1) * limit;
     const end = start + limit;
@@ -78,6 +80,8 @@ export class UsersRepository {
     );
   }
 
+  //* Obtener usuario por ID
+
   async getUserById(id: string) {
     const userFound = users.findIndex((u) => u.id === id);
     if (userFound === -1) return `No se encontró usuario con ID: ${id}`;
@@ -85,10 +89,14 @@ export class UsersRepository {
     return userNoPassword;
   }
 
+  //* Crear usuario
+
   async createUser(user: User) {
     users.push({ ...user, id: user.email });
     return user.email;
   }
+
+  //* Modificar información de usuario
 
   async updateUser(id: string, user: User) {
     const userFound = users.findIndex((u) => u.id === id);
@@ -98,6 +106,8 @@ export class UsersRepository {
     return users[userFound].id;
   }
 
+  //* Eliminar usuario
+
   async deleteUser(id: string) {
     const userFound = users.findIndex((u) => u.id === id);
     if (userFound === -1) return `No se encontró usuario con ID: ${id}`;
@@ -105,6 +115,8 @@ export class UsersRepository {
     users.splice(userFound, 1);
     return id;
   }
+
+  //* Encontrar usuario por email
 
   getuserByEmail(email: string) {
     return users.find((user) => user.email === email);
