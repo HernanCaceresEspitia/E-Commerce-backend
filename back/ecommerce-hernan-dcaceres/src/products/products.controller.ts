@@ -24,6 +24,11 @@ export class ProductsController {
       return this.productService.getProducts(Number(page), Number(limit));
   }
 
+  @Get('seeder')
+  addProducts() {
+    return this.productService.createProduct();
+  }
+
   @Get(':id')
   getProductById(@Param('id') id: string) {
     return this.productService.getProductById(id);
@@ -31,8 +36,8 @@ export class ProductsController {
 
   @Post()
   @UseGuards(AuthGuard)
-  createProduct(@Body() product: any) {
-    return this.productService.createProduct(product);
+  createProduct() {
+    return this.productService.createProduct();
   }
 
   @Put(':id')

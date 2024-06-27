@@ -13,8 +13,8 @@ export class ProductsService {
     return this.productsRepository.getProductById(id);
   }
 
-  createProduct(product: any) {
-    return this.productsRepository.createProduct(product);
+  createProduct() {
+    return this.productsRepository.createProduct();
   }
 
   updateProduct(id: string, product: any) {
