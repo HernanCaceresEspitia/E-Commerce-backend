@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { CreateUserDto } from './users.dto';
 
 @Controller('users')
 export class UsersController {
@@ -32,7 +33,7 @@ export class UsersController {
   }
 
   @Post()
-  createUser(@Body() user: any) {
+  createUser(@Body() user: CreateUserDto) {
     return this.userService.createUser(user);
   }
 

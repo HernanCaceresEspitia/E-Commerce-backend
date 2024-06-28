@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
+import { Users } from 'src/entities/users.entity';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,7 @@ export class UsersService {
     return this.usersRepository.getUserById(id);
   }
 
+  //TODO arreglar tipo de usuario
   createUser(user: any) {
     return this.usersRepository.createUser(user);
   }
