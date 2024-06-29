@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
+import { Products } from 'src/entities/products.entity';
 
 @Injectable()
 export class ProductsService {
@@ -9,8 +10,12 @@ export class ProductsService {
     return this.productsRepository.getProducts(page, limit);
   }
 
-  getProductById(id: string) {
-    return this.productsRepository.getProductById(id);
+  async getProductById(id: string) {
+    const product = await this.productsRepository.getProductById(id);
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    return product;
   }
 
   createProduct() {
@@ -19,6 +24,15 @@ export class ProductsService {
 
   updateProduct(id: string, product: any) {
     return this.productsRepository.updateProduct(id, product);
+  }
+
+  async updateProductImage(productId: string, imgUrl: string) {
+    const product = await this.getProductById(productId);
+    if (!product) {
+      throw new NotFoundException('Producto no encontrado');
+    }
+    product.imgUrl = imgUrl;
+    await this.productsRepository.updateProduct(productId, product);
   }
 
   deleteProduct(id: string) {

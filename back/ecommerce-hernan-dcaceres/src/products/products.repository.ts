@@ -90,12 +90,8 @@ export class ProductsRepository {
 
   //* Obtener producto por ID
 
-  async getProductById(id: string) {
-    const product = await this.productsRepository.findOneBy({ id });
-    if (!product) {
-      return `Producto con ID: ${id} no encontrado.`;
-    }
-    return product;
+  async getProductById(id: string): Promise<Products | null> {
+    return await this.productsRepository.findOne({ where: { id } });
   }
 
   //* Crear producto
