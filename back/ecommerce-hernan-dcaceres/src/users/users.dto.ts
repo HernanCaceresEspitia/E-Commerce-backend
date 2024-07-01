@@ -5,10 +5,13 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsStrongPassword,
   Matches,
   MaxLength,
   MinLength,
+  Validate,
 } from 'class-validator';
+import { MatchPassword } from 'src/decorators/matchPassword.decorator';
 
 export class CreateUserDto {
   id?: string;
@@ -27,11 +30,12 @@ export class CreateUserDto {
   @IsString()
   @MinLength(8)
   @MaxLength(15)
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$/, {
-    message:
-      'La constraseña debe contener al menos un cáracter en minúscula, un número y uno de los siguientes carácteres: !@#$%^&*',
-  })
+  @IsStrongPassword()
   password: string;
+
+  @IsNotEmpty()
+  @Validate(MatchPassword, ['password'])
+  confirmPassword: string;
 
   @IsNotEmpty()
   @IsString()

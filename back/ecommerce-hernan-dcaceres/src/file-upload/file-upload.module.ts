@@ -13,7 +13,6 @@ import { ProductsModule } from 'src/products/products.module';
     FileUploadService,
     CloudinaryConfig,
     FileUploadRepository,
-    CloudinaryConfig,
     CloudinaryService,
   ],
 })

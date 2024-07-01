@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Controller,
   FileTypeValidator,
-  MaxFileSizeValidator,
   Param,
   ParseFilePipe,
   Post,
@@ -30,7 +29,16 @@ export class FileUploadController {
   async uploadImage(
     @Param('id')
     productId: string,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: /(.jpg|.png|.jpeg)/,
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
   ) {
     if (!file) {
       throw new BadRequestException('Archivo no subido');
