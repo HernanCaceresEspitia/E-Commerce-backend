@@ -6,6 +6,7 @@ import {
   ParseFilePipe,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { CloudinaryService } from './cloudinary.service';
 import { ProductsService } from 'src/products/products.service';
 import { MaxSizeValidatorPipe } from './maxSizeValidator.pipe';
 import { FileTypeValidatorPipe } from './FileTypeValidator.pipe';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('files')
 export class FileUploadController {
@@ -23,7 +25,8 @@ export class FileUploadController {
     private readonly productsService: ProductsService,
   ) {}
   //*Capturar la imagen
-  @Post('uploadImage/:id')
+  @Post('uploadImage/:productId')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @UsePipes(MinSizeValidatorPipe, MaxSizeValidatorPipe)
   async uploadImage(
