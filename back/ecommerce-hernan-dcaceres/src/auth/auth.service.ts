@@ -23,7 +23,7 @@ export class AuthService {
       throw new BadRequestException('Credenciales incorrectas');
 
     //*Firmar token
-    const payload = { id: user.id, email: user.email };
+    const payload = { id: user.id, email: user.email, isAdmin: user.isAdmin };
     const token = this.jwtService.sign(payload);
 
     return {

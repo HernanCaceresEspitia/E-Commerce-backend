@@ -52,6 +52,17 @@ export class Users {
   })
   address: string;
 
+  @Column({
+    type: 'varchar',
+    length: 50,
+  })
+  city: string;
+
+  @Column({
+    default: false,
+  })
+  isAdmin: boolean;
+
   @OneToMany(() => Orders, (order) => order.user)
   @JoinColumn({ name: 'order_id' })
   orders: Orders[];
