@@ -2,18 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/entities/users.entity';
 import { Repository } from 'typeorm';
-
-type User = {
-  id: string;
-  email: string;
-  name: string;
-  password: string;
-  address: string;
-  phone: string;
-  country?: string;
-  city?: string;
-};
-
 @Injectable()
 export class UsersRepository {
   constructor(

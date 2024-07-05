@@ -16,7 +16,7 @@ export class Users {
 
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 80,
     nullable: false,
   })
   name: string;
@@ -31,7 +31,7 @@ export class Users {
 
   @Column({
     type: 'varchar',
-    length: 128,
+    length: 15,
     nullable: false,
   })
   password: string;
@@ -43,7 +43,7 @@ export class Users {
 
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 20,
   })
   country: string;
 

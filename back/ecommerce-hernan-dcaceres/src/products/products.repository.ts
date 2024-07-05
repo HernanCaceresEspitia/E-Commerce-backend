@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Categories } from 'src/entities/categories.entity';
 import { Products } from 'src/entities/products.entity';
@@ -75,6 +75,8 @@ export class ProductsRepository {
     private categoriesRepository: Repository<Categories>,
   ) {}
 
+  //! Obtener todos los productos
+
   async getProducts(page: number, limit: number): Promise<Products[]> {
     let products = await this.productsRepository.find({
       relations: {
@@ -88,13 +90,17 @@ export class ProductsRepository {
     return products;
   }
 
-  //* Obtener producto por ID
+  //! Obtener producto por ID
 
   async getProductById(id: string): Promise<Products | null> {
-    return await this.productsRepository.findOne({ where: { id } });
+    const product = await this.productsRepository.findOneBy({ id });
+    if (!product) {
+      throw new NotFoundException(`Producto con ${id} no encontrado`);
+    }
+    return product;
   }
 
-  //* Crear producto
+  //! Crear producto
 
   async createProduct() {
     //* Verificar la existencia de la categoria
@@ -103,7 +109,7 @@ export class ProductsRepository {
       const category = categories.find(
         (category) => category.name === element.category,
       );
-      // Crear nuevo producto y establecer atributos
+      //* Crear nuevo producto y establecer atributos
       const product = new Products();
       product.name = element.name;
       product.description = element.description;
@@ -112,7 +118,7 @@ export class ProductsRepository {
       product.stock = element.stock;
       product.category = category;
 
-      //Grabar el nuevo producto en la base de datos
+      //*Grabar el nuevo producto en la base de datos
 
       await this.productsRepository
         .createQueryBuilder()
@@ -125,7 +131,7 @@ export class ProductsRepository {
     return 'Productos agregados';
   }
 
-  //* Modificar producto
+  //! Modificar producto
 
   async updateProduct(id: string, product: Products) {
     await this.productsRepository.update(id, product);
@@ -135,7 +141,7 @@ export class ProductsRepository {
     return updatedProduct;
   }
 
-  //* Eliminar producto
+  //! Eliminar producto
 
   async deleteProduct(id: string) {
     const productFound = products.findIndex((p) => p.id === id);
