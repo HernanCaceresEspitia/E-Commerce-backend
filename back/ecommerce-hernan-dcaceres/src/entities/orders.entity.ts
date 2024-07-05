@@ -16,6 +16,11 @@ export class Orders {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  /**
+   * Debe ser un dato tipo Date
+   * @example '10/07/2024'
+   */
+
   @Column()
   date: Date;
 
