@@ -14,7 +14,12 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from './roles.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UpdateUserDto } from './users.dto';
 
 @ApiTags('Users')
@@ -26,6 +31,18 @@ export class UsersController {
   @Get()
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    description: 'Número de página',
+    example: '1',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Límite de elementos por página',
+    example: '5',
+  })
   @ApiOperation({ summary: 'Ver todos los usuarios' })
   getUsers(@Query('page') page: string, @Query('limit') limit: string) {
     !page ? (page = '1') : page;
