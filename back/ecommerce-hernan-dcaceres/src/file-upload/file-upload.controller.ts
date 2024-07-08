@@ -17,7 +17,13 @@ import { ProductsService } from 'src/products/products.service';
 import { MaxSizeValidatorPipe } from './maxSizeValidator.pipe';
 import { FileTypeValidatorPipe } from './FileTypeValidator.pipe';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @ApiTags('Upload Files')
 @Controller('files')
@@ -26,7 +32,9 @@ export class FileUploadController {
     private readonly cloudinaryService: CloudinaryService,
     private readonly productsService: ProductsService,
   ) {}
+
   //*Capturar la imagen
+
   @ApiBearerAuth()
   @Post('uploadImage/:productId')
   @UseGuards(AuthGuard)
@@ -44,6 +52,7 @@ export class FileUploadController {
       },
     },
   })
+  @ApiOperation({ summary: 'Cambiar la imagen de un producto' })
   async uploadImage(
     @Param('productId')
     productId: string,

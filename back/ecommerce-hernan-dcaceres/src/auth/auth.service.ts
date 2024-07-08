@@ -10,9 +10,6 @@ export class AuthService {
     private readonly usersRespository: UsersRepository,
     private readonly jwtService: JwtService,
   ) {}
-  getAuth() {
-    return 'Autenticación...';
-  }
 
   async signIn(email: string, password: string) {
     const user = await this.usersRespository.getuserByEmail(email);

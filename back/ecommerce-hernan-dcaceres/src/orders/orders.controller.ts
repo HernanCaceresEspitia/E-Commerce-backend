@@ -10,7 +10,7 @@ import {
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './orders.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -20,6 +20,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @Post()
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Crear una orden' })
   addOrder(@Body() order: CreateOrderDto) {
     const { userId, products } = order;
     return this.orderService.addOrder(userId, products);
@@ -28,6 +29,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @Get(':id')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Obtener una orden por ID' })
   getOrder(@Param('id') id: string) {
     return this.orderService.getOrder(id);
   }
@@ -35,6 +37,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @Delete(':id')
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Borrar una orden' })
   deleteOrder(@Param('id') id: string) {
     return this.orderService.deleteOrder(id);
   }

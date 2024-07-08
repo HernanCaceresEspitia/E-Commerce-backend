@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
@@ -11,6 +11,10 @@ import { CategoiresModule } from './categories/categoires.module';
 import { OrdersModule } from './orders/orders.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { JwtModule } from '@nestjs/jwt';
+import { Categories } from './entities/categories.entity';
+import { Products } from './entities/products.entity';
+import { CategoriesRepository } from './categories/categories.repository';
+import { ProductsRepository } from './products/products.repository';
 
 @Module({
   imports: [
@@ -34,8 +38,23 @@ import { JwtModule } from '@nestjs/jwt';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '30m' },
     }),
+    TypeOrmModule.forFeature([Categories, Products]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CategoriesRepository, ProductsRepository],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(
+    private readonly categoriesRepository: CategoriesRepository,
+    private readonly productsRepository: ProductsRepository,
+  ) {}
+
+  async onModuleInit() {
+    await this.seedData();
+  }
+
+  private async seedData() {
+    await this.categoriesRepository.addCategories();
+    await this.productsRepository.createSeederProducts();
+  }
+}
