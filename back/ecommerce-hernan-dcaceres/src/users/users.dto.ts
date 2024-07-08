@@ -1,13 +1,11 @@
-import { PickType } from '@nestjs/swagger';
+import { ApiHideProperty, PickType } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEmpty,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   IsStrongPassword,
-  Matches,
   MaxLength,
   MinLength,
   Validate,
@@ -15,8 +13,6 @@ import {
 import { MatchPassword } from 'src/decorators/matchPassword.decorator';
 
 export class CreateUserDto {
-  id?: string;
-
   /**
    * Debe ser un string entre 3 y 80 carácteres
    * @example 'Test User'
@@ -59,7 +55,7 @@ export class CreateUserDto {
 
   /**
    * Debe ser entre 4 y 80 carácteres
-   * @example Cl 100 # 50 - 25
+   * @example 'Cl 100 # 50 - 25'
    */
 
   @IsNotEmpty()
@@ -79,7 +75,7 @@ export class CreateUserDto {
 
   /**
    * Debe contener entre 4 y 20 carácteres
-   * @example 'Colombia'
+   * @example 'Test Country'
    */
 
   @IsNotEmpty()
@@ -89,7 +85,7 @@ export class CreateUserDto {
 
   /**
    * Debe contener entre 4 y 20 carácteres
-   * @example 'Test Country'
+   * @example 'Test City'
    */
 
   @IsNotEmpty()
@@ -98,20 +94,18 @@ export class CreateUserDto {
   @MaxLength(20)
   city: string;
 
+  @ApiHideProperty()
   @IsEmpty()
   isAdmin: boolean;
 }
 
-//TODO crear una clase para actualizar el usuario
-// export class UpdateUserDto {
-//   @IsOptional()
-//   @IsString()
-//   @MinLength(3)
-//   @MaxLength(80)
-//   name: string;
-// }
-
 export class LoginUserDto extends PickType(CreateUserDto, [
   'email',
   'password',
+]) {}
+
+export class UpdateUserDto extends PickType(CreateUserDto, [
+  'address',
+  'city',
+  'country',
 ]) {}

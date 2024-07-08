@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { Users } from 'src/entities/users.entity';
+import { CreateUserDto, UpdateUserDto } from './users.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,12 +14,11 @@ export class UsersService {
     return this.usersRepository.getUserById(id);
   }
 
-  //TODO arreglar tipo de usuario
-  createUser(user: any) {
+  createUser(user: CreateUserDto) {
     return this.usersRepository.createUser(user);
   }
 
-  updateUser(id: string, user: any) {
+  updateUser(id: string, user: UpdateUserDto) {
     return this.usersRepository.updateUser(id, user);
   }
 

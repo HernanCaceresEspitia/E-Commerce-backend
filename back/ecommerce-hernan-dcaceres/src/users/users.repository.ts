@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/entities/users.entity';
 import { Repository } from 'typeorm';
+import { UpdateUserDto } from './users.dto';
 @Injectable()
 export class UsersRepository {
   constructor(
@@ -46,7 +47,7 @@ export class UsersRepository {
 
   //* Modificar información de usuario
 
-  async updateUser(id: string, user: Users) {
+  async updateUser(id: string, user: UpdateUserDto) {
     await this.usersRepository.update(id, user);
     const updatedUser = await this.usersRepository.findOneBy({ id });
     const { password, ...userNoPassword } = updatedUser;
@@ -59,7 +60,7 @@ export class UsersRepository {
     const user = await this.usersRepository.findOneBy({ id });
     this.usersRepository.remove(user);
     const { password, ...userNoPassword } = user;
-    return userNoPassword;
+    return `Usuario con ID ${id} eliminado permanentemente`;
   }
 
   //* Encontrar usuario por email

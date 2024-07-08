@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { relative } from 'path';
 import { OrderDetaiils } from 'src/entities/orderdetails.entity';
 import { Orders } from 'src/entities/orders.entity';
 import { Products } from 'src/entities/products.entity';
@@ -18,6 +19,8 @@ export class OrdersRepository {
     @InjectRepository(Products)
     private productsRepository: Repository<Products>,
   ) {}
+
+  //! Crear orden
 
   async addOrder(userId: string, products: any) {
     let total = 0;
@@ -75,8 +78,10 @@ export class OrdersRepository {
     });
   }
 
-  getOrder(id: string) {
-    const order = this.ordersRepository.findOne({
+  //! Obtener orden por su ID
+
+  async getOrder(id: string) {
+    const order = await this.ordersRepository.findOne({
       where: { id },
       relations: {
         orderDetails: {
@@ -88,5 +93,27 @@ export class OrdersRepository {
       throw new NotFoundException(`Orden con ID: ${id}. No encontrada.`);
     }
     return order;
+  }
+
+  //! Eliminar orden
+
+  async deleteOrder(id: string) {
+    //* Busca la orden por su ID
+    const order = await this.ordersRepository.findOne({
+      where: { id },
+      relations: ['orderDetails'],
+    });
+
+    if (!order) {
+      throw new NotFoundException(`Orden con ${id} no encontrada.`);
+    }
+
+    //* Eliminar los detalles de la orden
+    await this.orderDetailRepository.delete({ order: { id: order.id } });
+
+    //* Eliminar la orden principal
+    await this.ordersRepository.delete(id);
+
+    return `Orden con ${id} eliminada exitosamente`;
   }
 }

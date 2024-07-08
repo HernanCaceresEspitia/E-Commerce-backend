@@ -17,7 +17,9 @@ import { ProductsService } from 'src/products/products.service';
 import { MaxSizeValidatorPipe } from './maxSizeValidator.pipe';
 import { FileTypeValidatorPipe } from './FileTypeValidator.pipe';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Upload Files')
 @Controller('files')
 export class FileUploadController {
   constructor(
@@ -25,12 +27,25 @@ export class FileUploadController {
     private readonly productsService: ProductsService,
   ) {}
   //*Capturar la imagen
+  @ApiBearerAuth()
   @Post('uploadImage/:productId')
   @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @UsePipes(MinSizeValidatorPipe, MaxSizeValidatorPipe)
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   async uploadImage(
-    @Param('id')
+    @Param('productId')
     productId: string,
     @UploadedFile(
       new ParseFilePipe({

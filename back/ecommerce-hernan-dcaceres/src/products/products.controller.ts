@@ -14,7 +14,9 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/users/roles.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ProductsDto, updateProduct } from './products.dto';
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productService: ProductsService) {}
@@ -38,18 +40,18 @@ export class ProductsController {
   }
 
   @Post()
-  @UseGuards(AuthGuard)
-  createProduct() {
-    return this.productService.createProduct();
+  createOneProduct(@Body() product: ProductsDto) {
+    return this.productService.createSingleProduct(product);
   }
-
+  @ApiBearerAuth()
   @Put(':id')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
-  updateProduct(@Param('id') id: string, @Body() product: any) {
+  updateProduct(@Param('id') id: string, @Body() product: updateProduct) {
     return this.productService.updateProduct(id, product);
   }
 
+  @ApiBearerAuth()
   @Delete(':id')
   @UseGuards(AuthGuard)
   deleteProduct(@Param('id') id: string) {
