@@ -45,7 +45,7 @@ export class ProductsRepository {
     return product;
   }
 
-  //! Crear producto
+  //! Crear producto desde el seeder
 
   async createSeederProducts() {
     //* Verificar la existencia de la categoria
@@ -101,8 +101,12 @@ export class ProductsRepository {
       return 'Productos ya existentes en la base de datos.';
     }
 
+    console.log(`Productos agregados exitosamente`);
+
     return 'Productos agregados';
   }
+
+  //! Crear producto personalizado
 
   async createSingleProduct(productDto: ProductsDto) {
     //*Verificar la categoría
