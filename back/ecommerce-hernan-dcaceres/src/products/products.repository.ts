@@ -9,6 +9,7 @@ import { Products } from 'src/entities/products.entity';
 import { Repository } from 'typeorm';
 import * as data from '../utils/data.json';
 import { ProductsDto, updateProduct } from './products.dto';
+import { OrderDetaiils } from 'src/entities/orderdetails.entity';
 
 @Injectable()
 export class ProductsRepository {
@@ -18,6 +19,8 @@ export class ProductsRepository {
     private productsRepository: Repository<Products>,
     @InjectRepository(Categories)
     private categoriesRepository: Repository<Categories>,
+    @InjectRepository(OrderDetaiils)
+    private orderDetailsRepository: Repository<OrderDetaiils>,
   ) {}
 
   //! Obtener todos los productos
@@ -97,8 +100,8 @@ export class ProductsRepository {
     }
 
     if (productsAlreadyLoaded) {
-      console.log('Todos los productos ya están cargados en la base de datos.');
-      return 'Productos ya existentes en la base de datos.';
+      console.log('Todos los productos ya están existen en la base de datos.');
+      return 'Productos ya existentes en la base de datos. Productos no agregados';
     }
 
     console.log(`Productos agregados exitosamente`);
@@ -168,5 +171,57 @@ export class ProductsRepository {
 
     await this.productsRepository.delete(id);
     return `Producto con ID: ${id} eliminado exitosamente`;
+  }
+
+  //! Eliminar todos los productos
+
+  async deleteAllProducts() {
+    //* Busca todos los productos
+
+    const products = await this.productsRepository.find();
+
+    if (products.length === 0) {
+      throw new NotFoundException('No hay productos en la base de datos');
+    }
+
+    //*Verifica si hay productos asociados a órdenes
+
+    const orderDetails = await this.orderDetailsRepository.find({
+      relations: ['products'],
+    });
+
+    const productsInOrders = new Set<string>();
+
+    orderDetails.forEach((orderDetail) => {
+      orderDetail.products.forEach((product) => {
+        productsInOrders.add(product.id);
+      });
+    });
+
+    if (productsInOrders.size > 0) {
+      console.warn(
+        `Aviso: Hay productos asociados a órdenes. Se procederá a eliminarlos igualmente.`,
+      );
+    }
+
+    //* Eliminar las referencias a los productos en ORDERDETAILS_PRODUCTS
+    await this.orderDetailsRepository
+      .createQueryBuilder()
+      .relation(OrderDetaiils, 'products')
+      .of(orderDetails.map((orderDetail) => orderDetail.id))
+      .remove(orderDetails.map((orderDetail) => orderDetail.products));
+
+    //* Eliminar los detalles de las órdenes asociadas a los productos
+
+    await this.orderDetailsRepository
+      .createQueryBuilder()
+      .delete()
+      .where('order_id IS NOT NULL')
+      .execute();
+
+    //* Eliminiar los productos de la BD
+    await this.productsRepository.createQueryBuilder().delete().execute();
+
+    return 'Todos los prodcutos han sido eliminados exitosamente';
   }
 }

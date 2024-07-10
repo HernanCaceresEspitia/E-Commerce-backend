@@ -29,7 +29,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @Get(':id')
   @UseGuards(AuthGuard)
-  @ApiOperation({ summary: 'Obtener una orden por ID' })
+  @ApiOperation({ summary: 'Obtener una orden por ID y ver sus detalles' })
   getOrder(@Param('id') id: string) {
     return this.orderService.getOrder(id);
   }

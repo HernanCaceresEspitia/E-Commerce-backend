@@ -15,6 +15,7 @@ import { Categories } from './entities/categories.entity';
 import { Products } from './entities/products.entity';
 import { CategoriesRepository } from './categories/categories.repository';
 import { ProductsRepository } from './products/products.repository';
+import { OrderDetaiils } from './entities/orderdetails.entity';
 
 @Module({
   imports: [
@@ -38,7 +39,7 @@ import { ProductsRepository } from './products/products.repository';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '30m' },
     }),
-    TypeOrmModule.forFeature([Categories, Products]),
+    TypeOrmModule.forFeature([Categories, Products, OrderDetaiils]),
   ],
   controllers: [AppController],
   providers: [AppService, CategoriesRepository, ProductsRepository],

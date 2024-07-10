@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Categories } from 'src/entities/categories.entity';
 import { Repository } from 'typeorm';
 import * as data from '../utils/data.json';
-import { log } from 'console';
 
 @Injectable()
 export class CategoriesRepository {
@@ -19,8 +18,8 @@ export class CategoriesRepository {
   async addCategories() {
     const existingCategories = await this.categoriesRepository.find();
     if (existingCategories.length > 0) {
-      console.log('Categorias ya cargadas en la base de datos');
-      return 'Categorias ya cargadas en la base de datos';
+      console.log('Categorias ya existentes en la base de datos');
+      return 'Categorias ya existentes en la base de datos';
     }
     data?.map(async (element) => {
       await this.categoriesRepository
@@ -31,7 +30,7 @@ export class CategoriesRepository {
         .orIgnore()
         .execute();
     });
-    console.log('Categorías ya cargadas');
+    console.log('Categorías agregadas');
     return 'Categorias agregadas';
   }
 }

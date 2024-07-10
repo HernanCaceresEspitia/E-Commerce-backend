@@ -57,4 +57,10 @@ export class ProductsService {
   deleteProduct(id: string) {
     return this.productsRepository.deleteProduct(id);
   }
+
+  //! Eliminar todos los productos
+
+  deleteAllProducts() {
+    return this.productsRepository.deleteAllProducts();
+  }
 }

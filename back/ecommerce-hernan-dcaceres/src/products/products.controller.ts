@@ -54,12 +54,14 @@ export class ProductsController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Obtener un producto por su ID' })
+  @ApiOperation({ summary: 'Obtener un producto por su ID y ver sus detalles' })
   getProductById(@Param('id') id: string) {
     return this.productService.getProductById(id);
   }
 
   @Post()
+  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
   @ApiOperation({ summary: 'Crear un producto único' })
   createOneProduct(@Body() product: ProductsDto) {
     return this.productService.createSingleProduct(product);
@@ -74,7 +76,17 @@ export class ProductsController {
   }
 
   @ApiBearerAuth()
+  @Delete('all')
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Borrar TODOS los productos' })
+  deleteAllProducts() {
+    return this.productService.deleteAllProducts();
+  }
+
+  @ApiBearerAuth()
   @Delete(':id')
+  @Roles(Role.Admin)
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Borrar producto' })
   deleteProduct(@Param('id') id: string) {
