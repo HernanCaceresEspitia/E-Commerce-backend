@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/entities/users.entity';
 import { Repository } from 'typeorm';
@@ -9,7 +9,7 @@ export class UsersRepository {
     @InjectRepository(Users) private usersRepository: Repository<Users>,
   ) {}
 
-  //* Obtener todos los usuarios
+  //! Obtener todos los usuarios
 
   async getUsers(page: number, limit: number) {
     const skip = (page - 1) * limit;
@@ -20,7 +20,7 @@ export class UsersRepository {
     return users.map(({ password, ...userNoPassword }) => userNoPassword);
   }
 
-  //* Obtener usuario por ID
+  //! Obtener usuario por ID
 
   async getUserById(id: string) {
     const user = await this.usersRepository.findOne({
@@ -34,7 +34,7 @@ export class UsersRepository {
     return userNoPassword;
   }
 
-  //* Crear usuario
+  //! Crear usuario
 
   async createUser(user: Partial<Users>) {
     const newUser = await this.usersRepository.save(user);
@@ -45,7 +45,7 @@ export class UsersRepository {
     return userNoPassword;
   }
 
-  //* Modificar información de usuario
+  //! Modificar información de usuario
 
   async updateUser(id: string, user: UpdateUserDto) {
     await this.usersRepository.update(id, user);
@@ -54,7 +54,7 @@ export class UsersRepository {
     return userNoPassword;
   }
 
-  //* Eliminar usuario
+  //! Eliminar usuario
 
   async deleteUser(id: string) {
     const user = await this.usersRepository.findOneBy({ id });
@@ -63,7 +63,7 @@ export class UsersRepository {
     return `Usuario con ID ${id} eliminado permanentemente`;
   }
 
-  //* Encontrar usuario por email
+  //! Encontrar usuario por email
 
   async getuserByEmail(email: string) {
     return await this.usersRepository.findOneBy({ email });
