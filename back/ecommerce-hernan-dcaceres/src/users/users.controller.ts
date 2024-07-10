@@ -52,6 +52,7 @@ export class UsersController {
   }
 
   @ApiBearerAuth()
+  @Roles(Role.User)
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Test para usuario tipo "user"' })
   @Get('test')

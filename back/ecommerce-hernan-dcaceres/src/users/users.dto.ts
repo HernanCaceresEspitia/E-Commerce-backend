@@ -26,7 +26,7 @@ export class CreateUserDto {
 
   /**
    * Debe ser un string con formato email válido
-   * @example 'test@mail.com'
+   * @example 'admin@mail.com'
    */
 
   @IsNotEmpty()

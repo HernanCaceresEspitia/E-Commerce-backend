@@ -15,7 +15,7 @@ class ProductIdDto {
 export class CreateOrderDto {
   /**
    * Debe ser un string
-   * @example '504a67fa-0535-4e38-91bb-2a67bc2f6248'
+   * @example 'e3c28103-d93f-4da7-a0f9-47351a531fa0'
    */
 
   @IsNotEmpty()
@@ -26,8 +26,8 @@ export class CreateOrderDto {
     type: [ProductIdDto],
     description: 'Lista de productos',
     example: [
-      { id: 'cd024838-d970-479a-8bbd-09a5ff89d67e' },
-      { id: '31488344-6306-4c96-bea9-fd0bcf61686f' },
+      { id: 'dd1f15d6-009e-4daf-9c94-0dc3594fc7bd' },
+      { id: 'f7f6d4e8-d101-4990-a16d-1b4d8e7cd1bf' },
     ],
   })
   @IsArray()

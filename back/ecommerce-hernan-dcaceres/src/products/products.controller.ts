@@ -60,8 +60,8 @@ export class ProductsController {
   }
 
   @Post()
-  @UseGuards(AuthGuard)
   @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Crear un producto único' })
   createOneProduct(@Body() product: ProductsDto) {
     return this.productService.createSingleProduct(product);
@@ -78,7 +78,7 @@ export class ProductsController {
   @ApiBearerAuth()
   @Delete('all')
   @Roles(Role.Admin)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Borrar TODOS los productos' })
   deleteAllProducts() {
     return this.productService.deleteAllProducts();
@@ -87,7 +87,7 @@ export class ProductsController {
   @ApiBearerAuth()
   @Delete(':id')
   @Roles(Role.Admin)
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @ApiOperation({ summary: 'Borrar producto' })
   deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
