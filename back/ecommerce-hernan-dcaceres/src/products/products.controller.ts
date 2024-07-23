@@ -60,12 +60,13 @@ export class ProductsController {
   }
 
   @Post()
-  @Roles(Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Crear un producto único' })
   createOneProduct(@Body() product: ProductsDto) {
     return this.productService.createSingleProduct(product);
   }
+
   @ApiBearerAuth()
   @Put(':id')
   @Roles(Role.Admin)
